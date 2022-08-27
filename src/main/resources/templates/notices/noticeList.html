@@ -23,6 +23,9 @@
                 <td th:text="${noticeDto.userName}"></td>
                 <td th:text="${noticeDto.content}"></td>
                 <td th:text="${noticeDto.postDate}"></td>
+                <td>
+                    <a href="#" th:href="@{/notices/{id}/details (id=${noticeDto.id})}" class="btn btn-primary" role="button">상세보기</a>
+                </td>
             </tr>
         </tbody>
     </table>

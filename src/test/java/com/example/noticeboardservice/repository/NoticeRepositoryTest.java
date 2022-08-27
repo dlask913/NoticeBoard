@@ -31,4 +31,24 @@ class NoticeRepositoryTest {
         System.out.println(savedNotice);
     }
 
+    public void createNoticeList(){
+        for (int i = 0; i < 10; i++) {
+            Notice notice = new Notice();
+            notice.setUserName("길동"+i);
+            notice.setTitle("게시글 만들기"+i);
+            notice.setContent("게시글 내용"+i);
+            notice.setPostDate(new Date());
+            noticeRepository.save(notice);
+        }
+    }
+
+    @Test
+    @DisplayName("유저명 검색 테스트")
+    public void findByUserNameTest() {
+        this.createNoticeList();
+        List<Notice> noticeList = noticeRepository.findByUserName("길동1");
+        for (Notice notice :noticeList) {
+            System.out.println(notice.toString());
+        }
+    }
 }

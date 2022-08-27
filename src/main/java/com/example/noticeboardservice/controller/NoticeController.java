@@ -7,12 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/notices")
@@ -21,14 +23,15 @@ public class NoticeController {
 
     private final NoticeService noticeService;
 
+    @GetMapping(value = "/{noticeId}/details")
+    public String NoticeDetails(@PathVariable("noticeId") Long noticeId, Model model) {
+        Notice notice = noticeService.findByNoticeId(noticeId);
 
-    @GetMapping(value = "/details")
-    public String NoticeDetails(Model model) {
         NoticeDto noticeDto = new NoticeDto();
-        noticeDto.setContent("게시글 내용");
-        noticeDto.setUserName("작성자");
-        noticeDto.setTitle("게시글 제목");
-        noticeDto.setPostDate(new Date());
+        noticeDto.setContent(notice.getContent());
+        noticeDto.setUserName(notice.getUserName());
+        noticeDto.setTitle(notice.getTitle());
+        noticeDto.setPostDate(notice.getPostDate());
 
         model.addAttribute("noticeDto", noticeDto);
         return "notices/noticeDetails";
