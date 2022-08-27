@@ -1,5 +1,6 @@
 package com.example.noticeboardservice.entity;
 
+import com.example.noticeboardservice.dto.NoticeDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,4 +31,13 @@ public class Notice {
     private String content; // 내용
 
     private Date postDate; // 게시날짜
+
+    public static Notice createNotice(NoticeDto noticeDto) {
+        Notice notice = new Notice();
+        notice.setTitle(noticeDto.getTitle());
+        notice.setUserName(noticeDto.getUserName());
+        notice.setContent(noticeDto.getContent());
+        notice.setPostDate(new Date());
+        return notice;
+    }
 }

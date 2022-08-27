@@ -1,11 +1,15 @@
-package com.example.noticeboardservice.controller;
+package com.example.noticeboardservice.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter @Setter
-public class NoticeForm {
+public class NoticeDto {
+    private Long id;
     private String userName;
     private String title;
     private String content;
+    private Date postDate;
 }

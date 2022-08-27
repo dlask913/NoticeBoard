@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
     List<Notice> findAll();
+
 }
