@@ -47,7 +47,7 @@ public class NoticeController {
     @GetMapping(value = "/new")
     public String noticeForm(Model model) {
         model.addAttribute("noticeDto", new NoticeDto());
-        return "notices/createNoticeForm";
+        return "notices/noticeForm";
     }
 
     @PostMapping(value = "/new")
