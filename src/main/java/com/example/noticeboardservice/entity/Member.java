@@ -26,8 +26,8 @@ public class Member {
     @Column(nullable = false)
     private String pw;
 
-//    @Enumerated(EnumType.STRING)
-//    private Role role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public static Member createMember(MemberDto memberDto){
         Member member = new Member();
