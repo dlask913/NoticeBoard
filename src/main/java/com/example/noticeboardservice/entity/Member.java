@@ -4,6 +4,7 @@ import com.example.noticeboardservice.dto.MemberDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
@@ -29,11 +30,12 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public static Member createMember(MemberDto memberDto){
+    public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder){
         Member member = new Member();
         member.setUserName(memberDto.getUserName());
         member.setEmail(memberDto.getEmail());
-        member.setPw(memberDto.getPw());
+        String pwd = passwordEncoder.encode(memberDto.getPw());
+        member.setPw(pwd);
         return member;
     }
 }

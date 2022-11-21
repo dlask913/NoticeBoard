@@ -2,10 +2,12 @@ package com.example.noticeboardservice.service;
 
 import com.example.noticeboardservice.dto.MemberDto;
 import com.example.noticeboardservice.entity.Member;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +20,16 @@ class MemberServiceTest {
 
     @Autowired
     MemberService memberService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
 
     public Member createMember(){
         MemberDto memberDto = new MemberDto();
         memberDto.setEmail("test1234@test.com");
         memberDto.setUserName("홍길동");
         memberDto.setPw("asdf1234");
-        return Member.createMember(memberDto);
+        return Member.createMember(memberDto,passwordEncoder);
     }
 
     @Test
