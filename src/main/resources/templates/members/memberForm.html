@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div class="container">
-    <form action="/members/new" role="form" method="post" th:object="${memberDto}">
+    <form action="/members/new" role="form" method="post" th:object="${memberFormDto}">
         <div class="form-group">
             <label th:for="email">이메일</label>
             <input type="email" th:field="*{email}" class="form-control" placeholder="사용할 이메일을 입력해주세요">

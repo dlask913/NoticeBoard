@@ -1,8 +1,7 @@
 package com.example.noticeboardservice.service;
 
-import com.example.noticeboardservice.dto.MemberDto;
+import com.example.noticeboardservice.dto.MemberFormDto;
 import com.example.noticeboardservice.entity.Member;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +24,11 @@ class MemberServiceTest {
 
 
     public Member createMember(){
-        MemberDto memberDto = new MemberDto();
-        memberDto.setEmail("test1234@test.com");
-        memberDto.setUserName("홍길동");
-        memberDto.setPw("asdf1234");
-        return Member.createMember(memberDto,passwordEncoder);
+        MemberFormDto memberFormDto = new MemberFormDto();
+        memberFormDto.setEmail("test1234@test.com");
+        memberFormDto.setUserName("홍길동");
+        memberFormDto.setPw("asdf1234");
+        return Member.createMember(memberFormDto,passwordEncoder);
     }
 
     @Test
@@ -41,6 +40,7 @@ class MemberServiceTest {
         assertEquals(member.getEmail(),savedMember.getEmail());
         assertEquals(member.getUserName(),savedMember.getUserName());
         assertEquals(member.getPw(),savedMember.getPw());
+        assertEquals(member.getRole(),savedMember.getRole());
     }
 
     @Test

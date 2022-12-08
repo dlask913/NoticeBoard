@@ -1,6 +1,6 @@
 package com.example.noticeboardservice.controller;
 
-import com.example.noticeboardservice.dto.MemberDto;
+import com.example.noticeboardservice.dto.MemberFormDto;
 import com.example.noticeboardservice.entity.Member;
 import com.example.noticeboardservice.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +24,17 @@ public class MemberController {
 
     @GetMapping(value = "/new")
     public String memberForm(Model model) {
-        model.addAttribute("memberDto", new MemberDto());
+        model.addAttribute("memberFormDto", new MemberFormDto());
         return "members/memberForm";
     }
 
     @PostMapping(value = "/new")
-    public String memberForm(@Valid MemberDto memberDto, BindingResult bindingResult, Model model){
+    public String memberForm(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
         if (bindingResult.hasErrors()) {
             return "members/memberForm";
         }
         try{
-            Member member = Member.createMember(memberDto,passwordEncoder);
+            Member member = Member.createMember(memberFormDto,passwordEncoder);
             memberService.saveMember(member);
         } catch (IllegalStateException e){
             model.addAttribute("errorMessage", e.getMessage());
@@ -45,21 +45,27 @@ public class MemberController {
 
     @GetMapping(value = "/login")
     public String loginMember(Model model) {
-        model.addAttribute("memberDto", new MemberDto());
+//        model.addAttribute("memberFormDto", new MemberFormDto());
         return "members/memberLoginForm";
     }
 
-    @PostMapping(value = "/login")
-    public String loginMember(MemberDto memberDto,Model model) {
-        Member member = memberService.findByEmail(memberDto.getEmail());
-        if (member == null){
-            model.addAttribute("message", "없는 회원입니다.");
-            return "members/memberLoginError";
-        } else if (!member.getPw().equals(memberDto.getPw())) {
-            model.addAttribute("message", "잘못된 비밀번호입니다.");
-            return "members/memberLoginError";
-        }
-        return "redirect:/";
+    @GetMapping(value = "/login/error")
+    public String loginError(Model model) {
+        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
+        return "members/memberLoginForm";
     }
+
+//    @PostMapping(value = "/login")
+//    public String loginMember(MemberFormDto memberFormDto, Model model) {
+//        Member member = memberService.findByEmail(memberFormDto.getEmail());
+//        if (member == null){
+//            model.addAttribute("message", "없는 회원입니다.");
+//            return "members/memberLoginError";
+//        } else if (!member.getPw().equals(memberFormDto.getPw())) {
+//            model.addAttribute("message", "잘못된 비밀번호입니다.");
+//            return "members/memberLoginError";
+//        }
+//        return "redirect:/";
+//    }
 
 }

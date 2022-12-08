@@ -1,6 +1,6 @@
 package com.example.noticeboardservice.entity;
 
-import com.example.noticeboardservice.dto.MemberDto;
+import com.example.noticeboardservice.dto.MemberFormDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,12 +30,13 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public static Member createMember(MemberDto memberDto, PasswordEncoder passwordEncoder){
+    public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder){
         Member member = new Member();
-        member.setUserName(memberDto.getUserName());
-        member.setEmail(memberDto.getEmail());
-        String pwd = passwordEncoder.encode(memberDto.getPw());
+        member.setUserName(memberFormDto.getUserName());
+        member.setEmail(memberFormDto.getEmail());
+        String pwd = passwordEncoder.encode(memberFormDto.getPw());
         member.setPw(pwd);
+        member.setRole(Role.USER);
         return member;
     }
 }

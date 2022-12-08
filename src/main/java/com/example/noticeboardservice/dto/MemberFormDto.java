@@ -4,13 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 @Getter @Setter
-public class MemberDto {
-    @NotBlank(message = "이메일은 필수 입력 값입니다.")
+public class MemberFormDto {
+    @NotEmpty(message = "이메일은 필수 입력 값입니다.")
     private String email;
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")
     private String userName;
-    @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
+    @NotEmpty(message = "비밀번호는 필수 입력 값입니다.")
     private String pw;
 }
