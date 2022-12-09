@@ -33,7 +33,7 @@ class MemberControllerTest {
         MemberFormDto memberFormDto = new MemberFormDto();
         memberFormDto.setEmail(email);
         memberFormDto.setUserName("홍길동");
-        memberFormDto.setPw(password);
+        memberFormDto.setPassword(password);
         Member member = Member.createMember(memberFormDto, passwordEncoder);
         return memberService.saveMember(member);
     }

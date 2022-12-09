@@ -25,7 +25,7 @@ public class Member {
 
     // 길이제한 했다가 encoder 값이 길어서 <org.springframework.dao.DataIntegrityViolationException> 에러남
     @Column(nullable = false)
-    private String pw;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -34,8 +34,8 @@ public class Member {
         Member member = new Member();
         member.setUserName(memberFormDto.getUserName());
         member.setEmail(memberFormDto.getEmail());
-        String pwd = passwordEncoder.encode(memberFormDto.getPw());
-        member.setPw(pwd);
+        String pwd = passwordEncoder.encode(memberFormDto.getPassword());
+        member.setPassword(pwd);
         member.setRole(Role.USER);
         return member;
     }

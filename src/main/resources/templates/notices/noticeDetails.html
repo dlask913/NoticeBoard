@@ -1,11 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout=http://www.ultraq.net.nz/thymeleaf/layout layout:decorate="~{layouts/layout1}">
+<div layout:fragment="content">
     <h1>게시글 데이터 출력 예시</h1>
     <div>
         게시글 제목 : <span th:text="${noticeDto.title}"></span>
@@ -19,5 +14,5 @@
     <div>
         게시글 작성일 : <span th:text="${noticeDto.postDate}"></span>
     </div>
-</body>
+</div>
 </html>

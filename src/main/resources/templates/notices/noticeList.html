@@ -1,33 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Title</title>
-</head>
-<body>
-    <h1> 게시판 리스트 출력 </h1>
-    <table border="1">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout=http://www.ultraq.net.nz/thymeleaf/layout layout:decorate="~{layouts/layout1}">
+<div layout:fragment="content">
+    <table class="table table-striped" border="1">
         <thead>
             <tr>
-                <td>순번</td>
-                <td>게시글명</td>
-                <td>닉네임</td>
-                <td>게시글내용</td>
-                <td>게시날짜</td>
+                <th scope="col">순번</th>
+                <td scope="col">게시글명</td>
+                <td scope="col">유저명</td>
+                <td scope="col">게시글내용</td>
+                <td scope="col">게시날짜</td>
             </tr>
         </thead>
         <tbody>
             <tr th:each="noticeDto, status: ${noticeDtoList}">
-                <td th:text="${status.index}"></td>
+                <th scope="row" th:text="${status.index+1}"></th>
                 <td th:text="${noticeDto.title}"></td>
                 <td th:text="${noticeDto.userName}"></td>
                 <td th:text="${noticeDto.content}"></td>
                 <td th:text="${noticeDto.postDate}"></td>
                 <td>
-                    <a href="#" th:href="@{/notices/{id}/details (id=${noticeDto.id})}" class="btn btn-primary" role="button">상세보기</a>
+                    <a href="#" th:href="@{/notices/{id}/details (id=${noticeDto.id})}" class="btn btn-outline-dark" role="button">상세보기</a>
                 </td>
             </tr>
         </tbody>
     </table>
-</body>
+</div>
 </html>
