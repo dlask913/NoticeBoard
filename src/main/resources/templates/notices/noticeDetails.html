@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout=http://www.ultraq.net.nz/thymeleaf/layout layout:decorate="~{layouts/layout1}">
 <div layout:fragment="content">
-    <h1>게시글 데이터 출력 예시</h1>
-    <div>
-        게시글 제목 : <span th:text="${noticeDto.title}"></span>
+    <div class="card">
+        <div class="card-body" >
+            <h2 class="card-title"><span th:text="${noticeDto.title}"></span></h2>
+            <p class="card-text"><span th:text="${noticeDto.content}"></span></p>
+<!--            <p class="text-right"><span th:text="${noticeDto.postDate}"></span></p>-->
+<!--            <p class="text-right">게시글 작성자 : <span th:text="${noticeDto.userName}"></span></p>-->
+            <p class="card-text"><small class="text-muted">등록 시간 : <span th:text="${noticeDto.postDate}"></span></small></p>
+            <p class="card-text"><small class="text-muted">작성자 : <span th:text="${noticeDto.userName}"></span></small></p>
+            <div class="text-center">
+                <a href="/" class="btn btn-outline-dark" style="width: 25%;">HOME</a>
+                <a href="/" class="btn btn-outline-dark" style="width: 25%;">삭제하기</a>
+                <a href="/" class="btn btn-outline-dark" style="width: 25%;">수정하기</a>
+            </div>
+        </div>
     </div>
     <div>
-        게시글 내용 : <span th:text="${noticeDto.content}"></span>
-    </div>
-    <div>
-        게시글 작성자 : <span th:text="${noticeDto.userName}"></span>
-    </div>
-    <div>
-        게시글 작성일 : <span th:text="${noticeDto.postDate}"></span>
     </div>
 </div>
 </html>
