@@ -56,4 +56,12 @@ public class NoticeController {
         noticeService.saveNotice(notice);
         return "redirect:/notices/all";
     }
+
+    @GetMapping(value = "/remove/{id}")
+    public String removeNotice(@PathVariable("id") Long id) {
+        System.out.println(id);
+        noticeService.removeByNoticeId(id);
+        return "redirect:/";
+    }
+
 }

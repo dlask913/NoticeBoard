@@ -33,4 +33,12 @@ public class NoticeService {
         return null;
     }
 
+    public void removeByNoticeId(Long id){
+        List<Notice> noticeList = noticeRepository.findAll();
+        for (Notice notice:noticeList) {
+            if (notice.getId().equals(id)) {
+                noticeRepository.delete(notice);
+            }
+        }
+    }
 }
