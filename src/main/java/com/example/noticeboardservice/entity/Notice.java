@@ -32,12 +32,17 @@ public class Notice {
 
     private Date postDate; // 게시날짜
 
-    public static Notice createNotice(NoticeDto noticeDto) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    public static Notice createNotice(NoticeDto noticeDto, Member member) {
         Notice notice = new Notice();
         notice.setTitle(noticeDto.getTitle());
         notice.setUserName(noticeDto.getUserName());
         notice.setContent(noticeDto.getContent());
         notice.setPostDate(new Date());
+        notice.setMember(member);
         return notice;
     }
 }

@@ -12,14 +12,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="noticeDto, status: ${noticeDtoList}">
+            <tr th:each="notice, status: ${noticeList}">
                 <th scope="row" th:text="${status.index+1}"></th>
-                <td th:text="${noticeDto.title}"></td>
-                <td th:text="${noticeDto.userName}"></td>
-                <td th:text="${noticeDto.content}"></td>
-                <td th:text="${noticeDto.postDate}"></td>
+                <td th:text="${notice.title}"></td>
+                <td th:text="${notice.userName}"></td>
+                <td th:text="${notice.content}"></td>
+                <td th:text="${notice.postDate}"></td>
                 <td>
-                    <a href="#" th:href="@{/notices/{id}/details (id=${noticeDto.id})}" class="btn btn-outline-dark" role="button">상세보기</a>
+                    <a href="#" th:href="@{/notices/{id}/details (id=${notice.id})}" class="btn btn-outline-dark" role="button">상세보기</a>
                 </td>
             </tr>
         </tbody>

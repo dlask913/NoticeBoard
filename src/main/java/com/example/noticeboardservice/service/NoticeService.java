@@ -3,11 +3,11 @@ package com.example.noticeboardservice.service;
 import com.example.noticeboardservice.entity.Notice;
 import com.example.noticeboardservice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,12 +33,19 @@ public class NoticeService {
         return null;
     }
 
-    public void removeByNoticeId(Long id){
+    public void deleteNotice(Long id){
         List<Notice> noticeList = noticeRepository.findAll();
         for (Notice notice:noticeList) {
             if (notice.getId().equals(id)) {
                 noticeRepository.delete(notice);
             }
         }
+    }
+
+    public void updateNotice(Long id, Notice updateNotice) {
+        Notice notice = findByNoticeId(id);
+        notice.setTitle(updateNotice.getTitle());
+        notice.setContent(updateNotice.getContent());
+        notice.setUserName(updateNotice.getUserName());
     }
 }

@@ -1,7 +1,9 @@
 package com.example.noticeboardservice.controller;
 
 import com.example.noticeboardservice.dto.NoticeDto;
+import com.example.noticeboardservice.entity.Member;
 import com.example.noticeboardservice.entity.Notice;
+import com.example.noticeboardservice.service.MemberService;
 import com.example.noticeboardservice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,10 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/notices")
@@ -22,25 +22,19 @@ import java.util.Optional;
 public class NoticeController {
 
     private final NoticeService noticeService;
+    private final MemberService memberService;
 
     @GetMapping(value = "/{noticeId}/details")
-    public String NoticeDetails(@PathVariable("noticeId") Long noticeId, Model model) {
+    public String noticeDetails(@PathVariable("noticeId") Long noticeId, Model model) {
         Notice notice = noticeService.findByNoticeId(noticeId);
-
-        NoticeDto noticeDto = new NoticeDto();
-        noticeDto.setContent(notice.getContent());
-        noticeDto.setUserName(notice.getUserName());
-        noticeDto.setTitle(notice.getTitle());
-        noticeDto.setPostDate(notice.getPostDate());
-
-        model.addAttribute("noticeDto", noticeDto);
+        model.addAttribute("notice", notice);
         return "notices/noticeDetails";
     }
 
     @GetMapping(value = "/all")
-    public String NoticeList(Model model) {
-        List<Notice> noticeDtoList = noticeService.findAll();
-        model.addAttribute("noticeDtoList", noticeDtoList);
+    public String noticesList(Model model) {
+        List<Notice> noticeList = noticeService.findAll();
+        model.addAttribute("noticeList", noticeList);
         return "notices/noticeList";
     }
 
@@ -51,17 +45,31 @@ public class NoticeController {
     }
 
     @PostMapping(value = "/new")
-    public String noticeForm(NoticeDto noticeDto) {
-        Notice notice = Notice.createNotice(noticeDto);
+    public String noticeCreate(NoticeDto noticeDto, Principal principal) {
+        System.out.println(principal.getName());
+        Member member = memberService.findByEmail(principal.getName());
+        Notice notice = Notice.createNotice(noticeDto,member);
         noticeService.saveNotice(notice);
         return "redirect:/notices/all";
     }
 
     @GetMapping(value = "/remove/{id}")
-    public String removeNotice(@PathVariable("id") Long id) {
-        System.out.println(id);
-        noticeService.removeByNoticeId(id);
-        return "redirect:/";
+    public String noticeDelete(@PathVariable("id") Long id) {
+        System.out.println("GET>>"+id);
+        noticeService.deleteNotice(id);
+        return "redirect:/notices/all";
     }
 
+    @GetMapping(value = "/{id}")
+    public String noticeUpdate(@PathVariable("id") Long id, Model model) {
+        Notice notice = noticeService.findByNoticeId(id);
+        model.addAttribute("noticeDto", notice);
+        return "notices/noticeForm";
+    }
+
+    @PostMapping(value = "/{id}")
+    public String noticeUpdate(@PathVariable("id") Long id, Notice notice) {
+        noticeService.updateNotice(id,notice);
+        return "redirect:/notices/all";
+    }
 }
