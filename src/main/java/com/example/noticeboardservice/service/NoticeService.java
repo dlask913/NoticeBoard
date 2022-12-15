@@ -46,6 +46,5 @@ public class NoticeService {
         Notice notice = findByNoticeId(id);
         notice.setTitle(updateNotice.getTitle());
         notice.setContent(updateNotice.getContent());
-        notice.setUserName(updateNotice.getUserName());
     }
 }

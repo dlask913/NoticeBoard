@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout=http://www.ultraq.net.nz/thymeleaf/layout layout:decorate="~{layouts/layout1}">
 <div layout:fragment="content">
-    <table class="table table-striped" border="1">
+    <table class="table">
         <thead>
             <tr>
                 <th scope="col">순번</th>
@@ -9,6 +9,7 @@
                 <td scope="col">유저명</td>
                 <td scope="col">게시글내용</td>
                 <td scope="col">게시날짜</td>
+                <td scope="col"></td>
             </tr>
         </thead>
         <tbody>
@@ -19,7 +20,7 @@
                 <td th:text="${notice.content}"></td>
                 <td th:text="${notice.postDate}"></td>
                 <td>
-                    <a href="#" th:href="@{/notices/{id}/details (id=${notice.id})}" class="btn btn-outline-dark" role="button">상세보기</a>
+                    <a href="#" th:href="@{/notices/{id}/details (id=${notice.id})}" role="button">상세보기</a>
                 </td>
             </tr>
         </tbody>

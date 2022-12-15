@@ -39,7 +39,6 @@ public class Notice {
     public static Notice createNotice(NoticeDto noticeDto, Member member) {
         Notice notice = new Notice();
         notice.setTitle(noticeDto.getTitle());
-        notice.setUserName(noticeDto.getUserName());
         notice.setContent(noticeDto.getContent());
         notice.setPostDate(new Date());
         notice.setMember(member);

@@ -8,11 +8,13 @@ import com.example.noticeboardservice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -28,6 +30,8 @@ public class NoticeController {
     public String noticeDetails(@PathVariable("noticeId") Long noticeId, Model model) {
         Notice notice = noticeService.findByNoticeId(noticeId);
         model.addAttribute("notice", notice);
+        String userId = notice.getMember().getEmail();
+        model.addAttribute("userId", userId);
         return "notices/noticeDetails";
     }
 
@@ -44,18 +48,27 @@ public class NoticeController {
         return "notices/noticeForm";
     }
 
+
+    // BindingResult나 Errors는 바인딩 받는 객체 바로 다음에 선언
     @PostMapping(value = "/new")
-    public String noticeCreate(NoticeDto noticeDto, Principal principal) {
-        System.out.println(principal.getName());
-        Member member = memberService.findByEmail(principal.getName());
-        Notice notice = Notice.createNotice(noticeDto,member);
-        noticeService.saveNotice(notice);
+    public String noticeCreate(@Valid NoticeDto noticeDto,BindingResult bindingResult,Model model, Principal principal) {
+        if (bindingResult.hasErrors()) {
+            return "notices/noticeForm";
+        }
+        try{
+            Member member = memberService.findByEmail(principal.getName());
+            Notice notice = Notice.createNotice(noticeDto,member);
+            notice.setUserName(member.getUserName());
+            noticeService.saveNotice(notice);
+        } catch (IllegalStateException e){
+            model.addAttribute("errorMessage", e.getMessage());
+            return "notices/noticeForm";
+        }
         return "redirect:/notices/all";
     }
 
     @GetMapping(value = "/remove/{id}")
     public String noticeDelete(@PathVariable("id") Long id) {
-        System.out.println("GET>>"+id);
         noticeService.deleteNotice(id);
         return "redirect:/notices/all";
     }

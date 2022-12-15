@@ -1,5 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout=http://www.ultraq.net.nz/thymeleaf/layout layout:decorate="~{layouts/layout1}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout=http://www.ultraq.net.nz/thymeleaf/layout layout:decorate="~{layouts/layout1}">
+<th:block layout:fragment="css">
+    <style>
+        .fieldError{
+            color: #bd2130;
+        }
+        .middle-btn{
+            text-align: center;
+            padding: 30px 20px 20px 20px;
+        }
+        .button {
+            background-color: #fff;
+            border-radius:28px;
+            border:1px solid #2F3545;
+            display:inline-block;
+            cursor:pointer;
+            color:#2F3545;
+            font-family:Arial;
+            font-size:17px;
+            padding:16px 31px;
+            text-decoration:none;
+            text-shadow: 0px 1px 0px #fff;
+            margin-left: 20px;
+            margin-right: 20px;
+            width: 300px;
+        }
+        .button:hover {
+            background-color:#2F3545;
+            color: #fff;
+        }
+        .button:active {
+            position:relative;
+            top:1px;
+        }
+    </style>
+</th:block>
     <div layout:fragment="content">
         <div class="card">
             <div class="card-body" >
@@ -9,9 +45,11 @@
                 <p class="card-text"><small class="text-muted">등록 시간 : <span th:text="${notice.postDate}"></span></small></p>
                 <p class="card-text"><small class="text-muted">작성자 : <span th:text="${notice.userName}"></span></small></p>
                 <div class="text-center">
-                    <a href="/" class="btn btn-outline-dark" style="width: 25%;">HOME</a>
-                    <a href="/" th:href="@{/notices/remove/{id} (id=${notice.id})}" class="btn btn-outline-dark" role="button" style="width: 25%;">삭제하기</a>
-                    <a href="/" th:href="@{/notices/{id} (id=${notice.id})}" class="btn btn-outline-dark" style="width: 25%;">수정하기</a>
+                    <a href="/" class="btn btn-outline-dark" style="width: 25%; border-radius:28px;">HOME</a>
+                    <span th:if="${#strings.equals(#authentication.name,userId)}"> <!-- 본인이 쓴 글만 수정/삭제 가능 -->
+                        <a href="/" th:href="@{/notices/remove/{id} (id=${notice.id})}" class="btn btn-outline-dark" role="button" style="width: 25%; border-radius:28px;">삭제하기</a>
+                        <a th:href="@{/notices/{id} (id=${notice.id})}" class="btn btn-outline-dark" style="width: 25%; border-radius:28px;">수정하기</a>
+                    </span>
                 </div>
             </div>
         </div>
