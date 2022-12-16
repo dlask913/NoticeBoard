@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter @Setter @ToString
 @Entity
 @Table(name = "member")
-public class Member {
+public class Member extends BaseEntity{
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,11 +20,9 @@ public class Member {
     @Column(unique = true)
     private String email;
 
-    @Column(length = 20)
     private String userName;
 
     // 길이제한 했다가 encoder 값이 길어서 <org.springframework.dao.DataIntegrityViolationException> 에러남
-    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)

@@ -21,69 +21,100 @@
         }
     </script>
 </th:block>
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        select{
+            margin-right:10px;
+        }
+        .page-link {
+          color: #999;
+          background-color: #fff;
+        }
+        .page-item.active .page-link {
+            z-index: 1;
+            color: #fff;
+            font-weight:bold;
+            background-color: #000;
+            border-color: #fff;
+        }
+        .page-link:focus, .page-link:hover {
+          color: #fff;
+          background-color: #000;
+        }
+        .footer-page {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translate(-50%, -50%)
+        }
 
+
+    </style>
+</th:block>
 <div layout:fragment="content">
     <form th:action="@{'/notices/all/' + ${noticeList.number}}" role="form" method="get" th:object="${noticeList}">
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">순번</th>
-                <td scope="col">게시글명</td>
-                <td scope="col">유저명</td>
-                <td scope="col">게시글내용</td>
-                <td scope="col">게시날짜</td>
-                <td scope="col"></td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="notice, status: ${noticeList}">
-                <th scope="row" th:text="${status.index+1}"></th>
-                <td th:text="${notice.title}"></td>
-                <td th:text="${notice.userName}"></td>
-                <td th:text="${notice.content}"></td>
-                <td th:text="${notice.postDate}"></td>
-                <td>
-                    <a href="#" th:href="@{/notices/{id}/details (id=${notice.id})}" role="button">상세보기</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <div th:with="start=${(noticeList.number/maxPage)*maxPage + 1}, end=(${(noticeList.totalPages == 0) ? 1 : (start + (maxPage - 1) < noticeList.totalPages ? start + (maxPage - 1) : noticeList.totalPages)})" >
-        <ul class="pagination justify-content-center">
+        <table class="table" style="table-layout: fixed">
+            <thead>
+                <tr>
+                    <th scope="col">순번</th>
+                    <td scope="col">제목</td>
+                    <td scope="col">유저명</td>
+                    <td scope="col">게시글내용</td>
+                    <td scope="col">게시날짜</td>
+                    <td scope="col"></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="notice, status: ${noticeList}">
+                    <th scope="row" th:text="${status.index+1}"></th>
+                    <td th:text="${notice.title}"></td>
+                    <td th:text="${notice.userName}"></td>
+                    <td th:text="${notice.content}"></td>
+                    <td th:text="${#temporals.format(notice.regTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
 
-            <li class="page-item" th:classappend="${noticeList.first}?'disabled'">
-                <a th:onclick="'javascript:page(' + ${noticeList.number - 1} + ')'" aria-label='Previous' class="page-link">
-                    <span aria-hidden='true'>Previous</span>
-                </a>
-            </li>
+                    <td>
+                        <a href="#" th:href="@{/notices/{id}/details (id=${notice.id})}" role="button">상세보기</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="footer-page">
+            <div th:with="start=${(noticeList.number/maxPage)*maxPage + 1}, end=(${(noticeList.totalPages == 0) ? 1 : (start + (maxPage - 1) < noticeList.totalPages ? start + (maxPage - 1) : noticeList.totalPages)})" >
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a th:onclick="'javascript:page(' + ${noticeList.number - 1} + ')'" aria-label='Previous' class="page-link">
+                            <span aria-hidden='true'>Previous</span>
+                        </a>
+                    </li>
 
-            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${noticeList.number eq page-1}?'active':''">
-                <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
-            </li>
+                    <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${noticeList.number eq page-1}?'active':''">
+                        <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
+                    </li>
+                    <li class="page-item">
+                        <a th:onclick="'javascript:page(' + ${noticeList.number + 1} + ')'" aria-label='Next' class="page-link">
+                            <span aria-hidden='true'>Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-            <li class="page-item" th:classappend="${noticeList.last}?'disabled'">
-                <a th:onclick="'javascript:page(' + ${items.number + 1} + ')'" aria-label='Next' class="page-link">
-                    <span aria-hidden='true'>Next</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-<!--    <div class="form-inline justify-content-center" th:object="${noticeSearchDto}">-->
-<!--        <select th:field="*{searchDateType}" class="form-control" style="width:auto;">-->
-<!--            <option value="all">전체기간</option>-->
-<!--            <option value="1d">1일</option>-->
-<!--            <option value="1w">1주</option>-->
-<!--            <option value="1m">1개월</option>-->
-<!--            <option value="6m">6개월</option>-->
-<!--        </select>-->
-<!--        <select th:field="*{searchBy}" class="form-control" style="width:auto;">-->
-<!--            <option value="title">제목</option>-->
-<!--            <option value="createdBy">등록자</option>-->
-<!--        </select>-->
-<!--        <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="검색어를 입력해주세요">-->
-<!--        <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>-->
-<!--    </div>-->
+            <div class="form-inline justify-content-center" th:object="${noticeSearchDto}">
+                <select th:field="*{searchDateType}" class="form-control" style="width:auto;">
+                    <option value="all">전체기간</option>
+                    <option value="1d">1일</option>
+                    <option value="1w">1주</option>
+                    <option value="1m">1개월</option>
+                    <option value="6m">6개월</option>
+                </select>
+                <select th:field="*{searchBy}" class="form-control" style="width:auto;">
+                    <option value="title">제목</option>
+                    <option value="createdBy">등록자</option>
+                </select>
+                <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="검색어를 입력해주세요">
+                <button id="searchBtn" type="submit" class="btn btn-dark">검색</button>
+            </div>
+        </div>
     </form>
 </div>
 </html>

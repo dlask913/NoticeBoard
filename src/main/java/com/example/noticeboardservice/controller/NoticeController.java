@@ -42,10 +42,9 @@ public class NoticeController {
 
     @GetMapping(value = {"/all","/all/{page}"})
     public String noticesList(Model model, @PathVariable("page")Optional<Integer> page, NoticeSearchDto noticeSearchDto) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,3);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,9);
         Page<Notice> notices = noticeService.getAdminItemPage(noticeSearchDto, pageable);
 
-//        List<Notice> noticeList = noticeService.findAll();
         model.addAttribute("noticeList", notices);
         model.addAttribute("noticeSearchDto", noticeSearchDto);
         model.addAttribute("maxPage", 5);

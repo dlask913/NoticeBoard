@@ -39,11 +39,10 @@
     <div layout:fragment="content">
         <div class="card">
             <div class="card-body" >
-                <h2 class="card-title"><span th:text="${notice.title}"></span></h2>
+                <h1 class="card-title" style="text-align: center;"><span th:text="${notice.title}"></span></h1>
+                <p class="card-text"> &nbsp; &nbsp;<span th:text="${notice.userName}"></span><small class="text-muted"> &nbsp; &nbsp; &nbsp;<span th:text="${#temporals.format(notice.regTime, 'yyyy-MM-dd HH:mm:ss')}"></span></small></p>
                 <hr>
                 <p class="card-text"><span th:text="${notice.content}"></span></p>
-                <p class="card-text"><small class="text-muted">등록 시간 : <span th:text="${notice.postDate}"></span></small></p>
-                <p class="card-text"><small class="text-muted">작성자 : <span th:text="${notice.userName}"></span></small></p>
                 <div class="text-center">
                     <a href="/" class="btn btn-outline-dark" style="width: 25%; border-radius:28px;">HOME</a>
                     <span th:if="${#strings.equals(#authentication.name,userId)}"> <!-- 본인이 쓴 글만 수정/삭제 가능 -->

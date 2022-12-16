@@ -12,6 +12,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +33,8 @@ class NoticeRepositoryTest {
         notice.setUserName("nana");
         notice.setTitle("게시글 만들기");
         notice.setContent("게시글 내용");
-        notice.setPostDate(new Date());
+        notice.setRegTime(LocalDateTime.now());
+        notice.setUpdateTime(LocalDateTime.now());
         Notice savedNotice = noticeRepository.save(notice);
         System.out.println(savedNotice);
     }
@@ -43,7 +45,8 @@ class NoticeRepositoryTest {
             notice.setUserName("길동"+i);
             notice.setTitle("게시글 만들기"+i);
             notice.setContent("게시글 내용"+i);
-            notice.setPostDate(new Date());
+            notice.setRegTime(LocalDateTime.now());
+            notice.setUpdateTime(LocalDateTime.now());
             noticeRepository.save(notice);
         }
     }

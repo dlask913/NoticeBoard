@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -13,7 +14,7 @@ import java.util.Date;
 @ToString
 @Table(name = "notice")
 @Entity
-public class Notice {
+public class Notice extends BaseEntity{
 
     @Id
     @Column(name = "notice_id")
@@ -30,7 +31,6 @@ public class Notice {
     @Column(nullable = false)
     private String content; // 내용
 
-    private Date postDate; // 게시날짜
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -40,7 +40,8 @@ public class Notice {
         Notice notice = new Notice();
         notice.setTitle(noticeDto.getTitle());
         notice.setContent(noticeDto.getContent());
-        notice.setPostDate(new Date());
+        notice.setRegTime(LocalDateTime.now());
+        notice.setUpdateTime(LocalDateTime.now());
         notice.setMember(member);
         return notice;
     }
