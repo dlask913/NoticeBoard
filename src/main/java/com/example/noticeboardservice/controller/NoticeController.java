@@ -1,11 +1,15 @@
 package com.example.noticeboardservice.controller;
 
 import com.example.noticeboardservice.dto.NoticeDto;
+import com.example.noticeboardservice.dto.NoticeSearchDto;
 import com.example.noticeboardservice.entity.Member;
 import com.example.noticeboardservice.entity.Notice;
 import com.example.noticeboardservice.service.MemberService;
 import com.example.noticeboardservice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/notices")
@@ -35,10 +40,15 @@ public class NoticeController {
         return "notices/noticeDetails";
     }
 
-    @GetMapping(value = "/all")
-    public String noticesList(Model model) {
-        List<Notice> noticeList = noticeService.findAll();
-        model.addAttribute("noticeList", noticeList);
+    @GetMapping(value = {"/all","/all/{page}"})
+    public String noticesList(Model model, @PathVariable("page")Optional<Integer> page, NoticeSearchDto noticeSearchDto) {
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,3);
+        Page<Notice> notices = noticeService.getAdminItemPage(noticeSearchDto, pageable);
+
+//        List<Notice> noticeList = noticeService.findAll();
+        model.addAttribute("noticeList", notices);
+        model.addAttribute("noticeSearchDto", noticeSearchDto);
+        model.addAttribute("maxPage", 5);
         return "notices/noticeList";
     }
 

@@ -1,9 +1,12 @@
 package com.example.noticeboardservice.service;
 
+import com.example.noticeboardservice.dto.NoticeSearchDto;
 import com.example.noticeboardservice.entity.Notice;
 import com.example.noticeboardservice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Not;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,5 +49,10 @@ public class NoticeService {
         Notice notice = findByNoticeId(id);
         notice.setTitle(updateNotice.getTitle());
         notice.setContent(updateNotice.getContent());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Notice> getAdminItemPage(NoticeSearchDto noticeSearchDto, Pageable pageable) {
+        return noticeRepository.getAdminItemPage(noticeSearchDto, pageable);
     }
 }
