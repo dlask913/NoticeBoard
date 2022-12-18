@@ -2,5 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout=http://www.ultraq.net.nz/thymeleaf/layout layout:decorate="~{layouts/layout1}">
     <div layout:fragment="content">
+        <table border="1">
+            <tr>
+                <td>data</td>
+                <td>title</td>
+                <td>category</td>
+            </tr>
+<!--            <tr th:each="shop : [[${shopApi}]]">-->
+<!--                <td th:text="${shop.data}">기간</td>-->
+<!--                <td th:text="${shop.get(period)}">품목</td>-->
+<!--                <td th:text="${shop.category}">카테고리</td>-->
+            </tr>
+        </table>
+        <p th:text="${shopApi}"></p>
     </div>
 </html>

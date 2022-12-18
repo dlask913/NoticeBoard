@@ -31,7 +31,6 @@ public class Notice extends BaseEntity{
     @Column(nullable = false)
     private String content; // 내용
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
