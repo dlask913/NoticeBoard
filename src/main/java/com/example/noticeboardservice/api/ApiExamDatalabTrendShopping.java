@@ -22,7 +22,7 @@ import java.util.Map;
 @Transactional
 public class ApiExamDatalabTrendShopping {
 
-    public JSONArray getShoppingApi() throws JSONException, ParseException {
+    public String getShoppingApi() throws JSONException, ParseException {
         String clientId = "Hnu5GfYDU_ir8lCnYLxw"; // 애플리케이션 클라이언트 아이디
         String clientSecret = "XH4Y7LlsNS"; // 애플리케이션 클라이언트 시크릿
 
@@ -33,8 +33,8 @@ public class ApiExamDatalabTrendShopping {
         requestHeaders.put("X-Naver-Client-Secret", clientSecret);
         requestHeaders.put("Content-Type", "application/json");
 
-        String requestBody = "{\"startDate\":\"2017-08-01\"," +
-                "\"endDate\":\"2017-09-30\"," +
+        String requestBody = "{\"startDate\":\"2022-08-01\"," +
+                "\"endDate\":\"2022-09-30\"," +
                 "\"timeUnit\":\"month\"," +
                 "\"category\":[{\"name\":\"패션의류\",\"param\":[\"50000000\"]}," +
                 "{\"name\":\"화장품/미용\",\"param\":[\"50000002\"]}]," +
@@ -45,19 +45,9 @@ public class ApiExamDatalabTrendShopping {
         String responseBody = post(apiUrl, requestHeaders, requestBody);
 
         JSONObject jsonObject = new JSONObject(responseBody);
-        JSONArray jsonArray = jsonObject.getJSONArray("results");
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject res = jsonArray.getJSONObject(i);
-            System.out.println(res);
-
-        }
-
-        System.out.println(jsonArray);
-        System.out.println(responseBody);
+        String jsonArray = jsonObject.getJSONArray("results").toString();
         return jsonArray;
     }
-
-
 
     private static String post(String apiUrl, Map<String, String> requestHeaders, String requestBody) {
         HttpURLConnection con = connect(apiUrl);

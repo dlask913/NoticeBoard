@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +21,18 @@ import java.util.List;
 public class MainController {
 
     private final ApiExamDatalabTrendShopping apiExamDatalabTrendShopping;
-//    @GetMapping(value = "/")
-//    public String main(){
-//        return "main";
-//    }
-
     @GetMapping(value = "/")
-    String getShoppingApi(Model model) throws JSONException, ParseException {
-        JSONArray res = apiExamDatalabTrendShopping.getShoppingApi();
-        List<JSONObject> result = new ArrayList<>();
-        for (int i = 0; i < res.length(); i++) {
-            JSONObject jsonObject = (JSONObject) res.get(i);
-        }
-        model.addAttribute("shopApi",res);
-        System.out.println(">>>>>");
-        System.out.println(result);
+    public String main(){
         return "main";
+    }
+
+    @RequestMapping(value = "/shop")
+    @ResponseBody
+    public String getShoppingApi() throws JSONException, ParseException {
+        String res = apiExamDatalabTrendShopping.getShoppingApi();
+
+        System.out.println(">>>>>result");
+        System.out.println(res);
+        return res;
     }
 }

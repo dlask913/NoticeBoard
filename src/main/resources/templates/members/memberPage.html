@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout=http://www.ultraq.net.nz/thymeleaf/layout layout:decorate="~{layouts/layout1}">
+<!--프로필 추가하기-->
+<div layout:fragment="content">
+    <table class="table" style="table-layout: fixed">
+        <thead>
+        <tr>
+            <th scope="col">순번</th>
+            <td scope="col">작성이</td>
+            <td scope="col">제목</td>
+            <td scope="col">게시날짜</td>
+            <td scope="col"></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="notice, status: ${notice}">
+            <th scope="row" th:text="${status.index+1}"></th>
+            <td th:text="${notice.userName}"></td>
+            <td th:text="${notice.title}"></td>
+            <td th:text="${#temporals.format(notice.regTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td>
+                <a href="#" th:href="@{/notices/{id}/details (id=${notice.id})}" role="button">상세보기</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</html>

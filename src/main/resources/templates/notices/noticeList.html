@@ -58,9 +58,8 @@
             <thead>
                 <tr>
                     <th scope="col">순번</th>
+                    <td scope="col">작성이</td>
                     <td scope="col">제목</td>
-                    <td scope="col">유저명</td>
-                    <td scope="col">게시글내용</td>
                     <td scope="col">게시날짜</td>
                     <td scope="col"></td>
                 </tr>
@@ -68,9 +67,8 @@
             <tbody>
                 <tr th:each="notice, status: ${noticeList}">
                     <th scope="row" th:text="${status.index+1}"></th>
-                    <td th:text="${notice.title}"></td>
                     <td th:text="${notice.userName}"></td>
-                    <td th:text="${notice.content}"></td>
+                    <td th:text="${notice.title}"></td>
                     <td th:text="${#temporals.format(notice.regTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
 
                     <td>

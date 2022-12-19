@@ -6,50 +6,24 @@
         .fieldError{
             color: #bd2130;
         }
-        .middle-btn{
-            text-align: center;
-            padding: 30px 20px 20px 20px;
-        }
-        .button {
-            background-color: #fff;
-            border-radius:28px;
-            border:1px solid #2F3545;
-            display:inline-block;
-            cursor:pointer;
-            color:#2F3545;
-            font-family:Arial;
-            font-size:17px;
-            padding:16px 31px;
-            text-decoration:none;
-            text-shadow: 0px 1px 0px #fff;
-            margin-left: 20px;
-            margin-right: 20px;
-            width: 300px;
-        }
-        .button:hover {
-            background-color:#2F3545;
-            color: #fff;
-        }
-        .button:active {
-            position:relative;
-            top:1px;
-        }
+
     </style>
 </th:block>
     <div layout:fragment="content">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="card">
             <div class="card-body" >
                 <h1 class="card-title" style="text-align: center;"><span th:text="${notice.title}"></span></h1>
-                <p class="card-text"> &nbsp; &nbsp;<span th:text="${notice.userName}"></span><small class="text-muted"> &nbsp; &nbsp; &nbsp;<span th:text="${#temporals.format(notice.regTime, 'yyyy-MM-dd HH:mm:ss')}"></span></small></p>
+                    <p class="card-text" style="float:left;"> &nbsp; &nbsp;<span th:text="${notice.userName}"></span><small class="text-muted"> &nbsp; &nbsp; &nbsp;<span th:text="${#temporals.format(notice.regTime, 'yyyy-MM-dd HH:mm:ss')}"></span></small></p>
+                    <div class="text-right" >
+                        <span th:if="${#strings.equals(#authentication.name,userId)}"> <!-- 본인이 쓴 글만 수정/삭제 가능 -->
+                            <a href="/" th:href="@{/notices/remove/{id} (id=${notice.id})}" class="btn" role="button"><i class="fa fa-trash"></i></a>
+                            <a th:href="@{/notices/{id} (id=${notice.id})}" class="btn"><i class="fa fa-pencil"></i></a>
+                        </span>
+                        <a href="/" class="btn" ><i class="fa fa-home"></i></a>
+                    </div>
                 <hr>
                 <p class="card-text"><span th:text="${notice.content}"></span></p>
-                <div class="text-center">
-                    <a href="/" class="btn btn-outline-dark" style="width: 25%; border-radius:28px;">HOME</a>
-                    <span th:if="${#strings.equals(#authentication.name,userId)}"> <!-- 본인이 쓴 글만 수정/삭제 가능 -->
-                        <a href="/" th:href="@{/notices/remove/{id} (id=${notice.id})}" class="btn btn-outline-dark" role="button" style="width: 25%; border-radius:28px;">삭제하기</a>
-                        <a th:href="@{/notices/{id} (id=${notice.id})}" class="btn btn-outline-dark" style="width: 25%; border-radius:28px;">수정하기</a>
-                    </span>
-                </div>
             </div>
         </div>
     </div>
