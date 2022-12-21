@@ -54,22 +54,22 @@
 </th:block>
 <div layout:fragment="content">
     <form th:action="@{'/notices/all/' + ${noticeList.number}}" role="form" method="get" th:object="${noticeList}">
-        <table class="table" style="table-layout: fixed">
+        <table class="table" style="table-layout: fixed; text-align: center;">
             <thead>
                 <tr>
-                    <th scope="col">순번</th>
-                    <td scope="col">작성이</td>
+                    <th scope="col" style="width: 5%;">순번</th>
                     <td scope="col">제목</td>
-                    <td scope="col">게시날짜</td>
-                    <td scope="col"></td>
+                    <td scope="col" style="width: 15%">작성이</td>
+                    <td scope="col" style="width: 15%">게시날짜</td>
+                    <td scope="col" style="width: 15%"></td>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="notice, status: ${noticeList}">
                     <th scope="row" th:text="${status.index+1}"></th>
-                    <td th:text="${notice.userName}"></td>
                     <td th:text="${notice.title}"></td>
-                    <td th:text="${#temporals.format(notice.regTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${notice.userName}"></td>
+                    <td th:text="${#temporals.format(notice.regTime, 'yyyy-MM-dd')}"></td>
 
                     <td>
                         <a href="#" th:href="@{/notices/{id}/details (id=${notice.id})}" role="button">상세보기</a>

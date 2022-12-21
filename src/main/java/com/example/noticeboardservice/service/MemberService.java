@@ -1,6 +1,7 @@
 package com.example.noticeboardservice.service;
 
 import com.example.noticeboardservice.entity.Member;
+import com.example.noticeboardservice.entity.Notice;
 import com.example.noticeboardservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -53,5 +54,13 @@ public class MemberService implements UserDetailsService {
                 .password(member.getPassword())
                 .roles(member.getRole().toString())
                 .build();
+    }
+
+    public void updateMember(String id, Member updateMember) {
+        Member member = memberRepository.findByEmail(id);
+        System.out.println(">!!!!!!!!!");
+        System.out.println(member);
+        member.setInfo(updateMember.getInfo());
+        System.out.println(member);
     }
 }

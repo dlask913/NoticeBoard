@@ -25,6 +25,8 @@ public class Member extends BaseEntity{
     // 길이제한 했다가 encoder 값이 길어서 <org.springframework.dao.DataIntegrityViolationException> 에러남
     private String password;
 
+    private String info;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -33,6 +35,7 @@ public class Member extends BaseEntity{
         member.setUserName(memberFormDto.getUserName());
         member.setEmail(memberFormDto.getEmail());
         String pwd = passwordEncoder.encode(memberFormDto.getPassword());
+        member.setInfo(memberFormDto.getInfo());
         member.setPassword(pwd);
         member.setRole(Role.USER);
         return member;
