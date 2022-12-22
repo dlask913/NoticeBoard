@@ -10,10 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -36,14 +34,20 @@ public class MemberController {
     }
 
     @PostMapping(value = "/new")
-    public String newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
+    public String newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model,
+                            @RequestParam("memberImgFile")MultipartFile memberImgFile){
         if (bindingResult.hasErrors()) {
             return "members/memberForm";
         }
+        if (memberImgFile.isEmpty() && memberFormDto.getId() == null) {
+            model.addAttribute("errorMessage", "이미지를 입력해주세요");
+            return "members/memberForm";
+        }
+
         try{
             Member member = Member.createMember(memberFormDto,passwordEncoder);
-            memberService.saveMember(member);
-        } catch (IllegalStateException e){
+            memberService.saveMember(member,memberImgFile);
+        } catch (Exception e){
             model.addAttribute("errorMessage", e.getMessage());
             return "members/memberForm";
         }
@@ -51,7 +55,7 @@ public class MemberController {
     }
 
     @GetMapping(value = "/login")
-    public String loginMember(Model model) {
+    public String loginMember() {
         return "members/memberLoginForm";
     }
 
@@ -88,8 +92,15 @@ public class MemberController {
     }
 
     @PostMapping(value = "/{email}")
-    public String memberUpdate(@PathVariable("email") String id, Member member) {
-        memberService.updateMember(id,member);
+    public String memberUpdate(@PathVariable("email") String id, Member inputMember,Model model) {
+        Member member = memberService.findByEmail(id);
+        if (!passwordEncoder.matches(inputMember.getPassword(), member.getPassword())) {
+            model.addAttribute("loginErrorMsg", "비밀번호를 확인해주세요.");
+            model.addAttribute("memberFormDto", member);
+            return "members/memberForm";
+        }
+
+        memberService.updateMember(id,inputMember);
         return "redirect:/members/mypage";
     }
 

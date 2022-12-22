@@ -1,15 +1,20 @@
 package com.example.noticeboardservice.service;
 
+import com.example.noticeboardservice.dto.MemberFormDto;
 import com.example.noticeboardservice.entity.Member;
+import com.example.noticeboardservice.entity.MemberImg;
 import com.example.noticeboardservice.entity.Notice;
+import com.example.noticeboardservice.repository.MemberImgRepository;
 import com.example.noticeboardservice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -17,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final MemberImgService memberImgService;
+    private final MemberImgRepository memberImgRepository;
 
     public Member saveMember(Member member) {
         validateDuplicateMember(member);
@@ -58,9 +65,17 @@ public class MemberService implements UserDetailsService {
 
     public void updateMember(String id, Member updateMember) {
         Member member = memberRepository.findByEmail(id);
-        System.out.println(">!!!!!!!!!");
-        System.out.println(member);
         member.setInfo(updateMember.getInfo());
-        System.out.println(member);
     }
+
+    public Long saveMember(Member member, MultipartFile memberImgFile) throws Exception {
+        validateDuplicateMember(member);
+        memberRepository.save(member);
+
+        MemberImg memberImg = new MemberImg();
+        memberImg.setMember(member);
+        memberImgService.saveMemberImg(memberImg,memberImgFile);
+        return member.getId();
+    }
+
 }

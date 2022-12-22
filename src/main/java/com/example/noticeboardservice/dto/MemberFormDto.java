@@ -1,10 +1,14 @@
 package com.example.noticeboardservice.dto;
 
+import com.example.noticeboardservice.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
+import org.modelmapper.ModelMapper;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter
 public class MemberFormDto {
@@ -17,4 +21,16 @@ public class MemberFormDto {
     private String password;
     @NotEmpty(message = "기본 정보를 입력해주세요.")
     private String info;
+
+    private List<MemberImgDto> memberImgDto = new ArrayList<>();
+    private List<Long> memberImgId= new ArrayList<>();
+    private static ModelMapper modelMapper = new ModelMapper();
+
+    public Member createMember(){
+        return modelMapper.map(this, Member.class);
+    }
+
+    public static MemberFormDto of(Member member) {
+        return modelMapper.map(member, MemberFormDto.class);
+    }
 }
