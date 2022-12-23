@@ -22,8 +22,8 @@ public class MemberFormDto {
     @NotEmpty(message = "기본 정보를 입력해주세요.")
     private String info;
 
-    private List<MemberImgDto> memberImgDto = new ArrayList<>();
-    private List<Long> memberImgId= new ArrayList<>();
+    private MemberImgDto memberImgDto;
+    private Long memberImgId;
     private static ModelMapper modelMapper = new ModelMapper();
 
     public Member createMember(){

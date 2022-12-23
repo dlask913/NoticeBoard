@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service @Transactional
 @RequiredArgsConstructor
 public class MemberImgService {
@@ -26,12 +28,26 @@ public class MemberImgService {
         //파일 업로드
         if (!StringUtils.isEmpty(oriImgName)) {
             imgName = fileService.uploadFile(memberImgLocation, oriImgName, memberImgFile.getBytes());
-            imgUrl = "/images/member/"+imgName;
+            imgUrl = "/images/profile/"+imgName;
         }
 
         // 이미지 정보 저장
         memberImg.updateMemberImg(oriImgName,imgName,imgUrl);
         memberImgRepository.save(memberImg);
 
+    }
+
+    public void updateMemberImg(Long memberImgId, MultipartFile memberImgFile) throws Exception {
+        if (!memberImgFile.isEmpty()) {
+            MemberImg savedMemberImg = memberImgRepository.findById(memberImgId)
+                    .orElseThrow(EntityNotFoundException::new);
+            if (!StringUtils.isEmpty(savedMemberImg.getImgName())) {
+                fileService.deleteFile(memberImgLocation+"/"+savedMemberImg.getImgName());
+            }
+            String oriImgName = memberImgFile.getOriginalFilename();
+            String imgName = fileService.uploadFile(memberImgLocation, oriImgName, memberImgFile.getBytes());
+            String imgUrl = "/images/profile/"+imgName;
+            savedMemberImg.updateMemberImg(oriImgName,imgName,imgUrl);
+        }
     }
 }

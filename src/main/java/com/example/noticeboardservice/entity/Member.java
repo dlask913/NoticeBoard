@@ -40,5 +40,9 @@ public class Member extends BaseEntity{
         member.setRole(Role.USER);
         return member;
     }
+
+    public void updateMember(MemberFormDto memberFormDto) {
+        this.setInfo(memberFormDto.getInfo());
+    }
 }
 

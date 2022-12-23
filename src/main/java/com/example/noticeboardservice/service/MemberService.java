@@ -1,6 +1,7 @@
 package com.example.noticeboardservice.service;
 
 import com.example.noticeboardservice.dto.MemberFormDto;
+import com.example.noticeboardservice.dto.MemberImgDto;
 import com.example.noticeboardservice.entity.Member;
 import com.example.noticeboardservice.entity.MemberImg;
 import com.example.noticeboardservice.entity.Notice;
@@ -15,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 @Transactional
@@ -63,9 +66,14 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 
-    public void updateMember(String id, Member updateMember) {
-        Member member = memberRepository.findByEmail(id);
-        member.setInfo(updateMember.getInfo());
+    public Long updateMember(Long id, MemberFormDto memberFormDto, MultipartFile memberImgFile) throws Exception {
+        Member member = memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        member.updateMember(memberFormDto);
+
+        Long memberImgId = memberFormDto.getMemberImgId();
+        memberImgService.updateMemberImg(memberImgId,memberImgFile);
+        return member.getId();
+
     }
 
     public Long saveMember(Member member, MultipartFile memberImgFile) throws Exception {
@@ -76,6 +84,17 @@ public class MemberService implements UserDetailsService {
         memberImg.setMember(member);
         memberImgService.saveMemberImg(memberImg,memberImgFile);
         return member.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public MemberFormDto getMemberDtl(Long memberId){
+        MemberImg memberImg = memberImgRepository.findByMemberId(memberId);
+        MemberImgDto memberImgDto = MemberImgDto.of(memberImg);
+
+        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
+        MemberFormDto memberFormDto = MemberFormDto.of(member);
+        memberFormDto.setMemberImgDto(memberImgDto);
+        return memberFormDto;
     }
 
 }

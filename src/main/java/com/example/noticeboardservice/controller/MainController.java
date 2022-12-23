@@ -1,6 +1,7 @@
 package com.example.noticeboardservice.controller;
 
 import com.example.noticeboardservice.api.ApiExamDatalabTrendShopping;
+import com.example.noticeboardservice.dto.MemberFormDto;
 import com.example.noticeboardservice.entity.Member;
 import com.example.noticeboardservice.entity.Notice;
 import com.example.noticeboardservice.service.MemberService;
@@ -40,9 +41,10 @@ public class MainController {
                     res.add(notice);
                 }
             }
+            MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
 
             model.addAttribute("notice",res);
-            model.addAttribute("member", member);
+            model.addAttribute("member", memberFormDto);
             return "members/memberPage";
         } catch (NullPointerException e) {
             return "members/memberLoginForm";

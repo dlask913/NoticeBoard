@@ -1,6 +1,7 @@
 package com.example.noticeboardservice.controller;
 
 import com.example.noticeboardservice.dto.MemberFormDto;
+import com.example.noticeboardservice.dto.MemberImgDto;
 import com.example.noticeboardservice.entity.Member;
 import com.example.noticeboardservice.entity.Notice;
 import com.example.noticeboardservice.service.MemberService;
@@ -35,7 +36,7 @@ public class MemberController {
 
     @PostMapping(value = "/new")
     public String newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model,
-                            @RequestParam("memberImgFile")MultipartFile memberImgFile){
+                            @RequestParam("memberImgFile") MultipartFile memberImgFile){
         if (bindingResult.hasErrors()) {
             return "members/memberForm";
         }
@@ -77,9 +78,11 @@ public class MemberController {
         }
 
         Member member = memberService.findByEmail(principal.getName());
+        MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
+        System.out.println("URL>>"+memberFormDto.getMemberImgDto().getImgUrl());
 
         model.addAttribute("notice",res);
-        model.addAttribute("member",member);
+        model.addAttribute("member",memberFormDto);
 
         return "members/memberPage";
     }
@@ -87,20 +90,35 @@ public class MemberController {
     @GetMapping(value = "/{id}")
     public String memberUpdate(@PathVariable("id") String id, Model model) {
         Member member = memberService.findByEmail(id);
-        model.addAttribute("memberFormDto", member);
+        MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
+        model.addAttribute("memberFormDto", memberFormDto);
         return "members/memberForm";
     }
 
     @PostMapping(value = "/{email}")
-    public String memberUpdate(@PathVariable("email") String id, Member inputMember,Model model) {
+    public String memberUpdate(@PathVariable("email") String id, @Valid MemberFormDto memberFormDto,
+                               BindingResult bindingResult,
+                               @RequestParam("memberImgFile") MultipartFile memberImgFile, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "member/memberForm";
+        }
+        if (memberImgFile.isEmpty() && memberFormDto.getId() == null) {
+            model.addAttribute("errorMessage", "프로필 이미지를 등록해주세요.");
+        }
+
         Member member = memberService.findByEmail(id);
-        if (!passwordEncoder.matches(inputMember.getPassword(), member.getPassword())) {
+        if (!passwordEncoder.matches(memberFormDto.getPassword(), member.getPassword())) {
             model.addAttribute("loginErrorMsg", "비밀번호를 확인해주세요.");
             model.addAttribute("memberFormDto", member);
             return "members/memberForm";
         }
 
-        memberService.updateMember(id,inputMember);
+        try {
+            memberService.updateMember(member.getId(),memberFormDto,memberImgFile);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "프로필 수정 중 에러 발생");
+            return "member/memberForm";
+        }
         return "redirect:/members/mypage";
     }
 
