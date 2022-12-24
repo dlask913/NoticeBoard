@@ -12,7 +12,8 @@ import java.util.List;
 
 @Getter @Setter
 public class MemberFormDto {
-    private String id;
+    private Long id;
+
     @NotEmpty(message = "이메일은 필수 입력 값입니다.")
     private String email;
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")

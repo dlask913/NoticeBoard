@@ -12,6 +12,5 @@ import java.util.Optional;
 public interface NoticeRepository extends JpaRepository<Notice, Long>, QuerydslPredicateExecutor<Notice>, NoticeRepositoryCustom {
 
     List<Notice> findAll();
-
     List<Notice> findByUserName(String userName);
 }
