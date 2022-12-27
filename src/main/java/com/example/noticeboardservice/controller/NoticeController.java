@@ -1,9 +1,13 @@
 package com.example.noticeboardservice.controller;
 
+import com.example.noticeboardservice.dto.CommentDto;
+import com.example.noticeboardservice.dto.MemberFormDto;
 import com.example.noticeboardservice.dto.NoticeDto;
 import com.example.noticeboardservice.dto.NoticeSearchDto;
+import com.example.noticeboardservice.entity.Comment;
 import com.example.noticeboardservice.entity.Member;
 import com.example.noticeboardservice.entity.Notice;
+import com.example.noticeboardservice.service.CommentService;
 import com.example.noticeboardservice.service.MemberService;
 import com.example.noticeboardservice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +34,33 @@ public class NoticeController {
 
     private final NoticeService noticeService;
     private final MemberService memberService;
+    private final CommentService commentService;
 
     @GetMapping(value = "/{noticeId}/details")
     public String noticeDetails(@PathVariable("noticeId") Long noticeId, Model model) {
         Notice notice = noticeService.findByNoticeId(noticeId);
-        model.addAttribute("notice", notice);
+        Member member = notice.getMember();
+        MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
         String userId = notice.getMember().getEmail();
+        model.addAttribute("notice", notice);
+        model.addAttribute("member", memberFormDto);
         model.addAttribute("userId", userId);
+        model.addAttribute("commentDto", new CommentDto());
+        model.addAttribute("updateDto", new CommentDto());
+
+        List<Comment> commentList = commentService.findAll();
+        model.addAttribute("commentList", commentList);
         return "notices/noticeDetails";
+    }
+
+    @PostMapping(value = "/{noticeId}/details")
+    public String commentNew(@PathVariable("noticeId") Long noticeId, Model model,
+                             CommentDto commentDto, Principal principal){
+
+        Member member = memberService.findByEmail(principal.getName());
+        commentService.saveComment(commentDto,noticeId,member.getId());
+
+        return "redirect:/notices/{noticeId}/details";
     }
 
     @GetMapping(value = {"/all","/all/{page}"})

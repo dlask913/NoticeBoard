@@ -1,8 +1,11 @@
 package com.example.noticeboardservice.entity;
 
+import com.example.noticeboardservice.dto.CommentDto;
+import com.example.noticeboardservice.dto.MemberFormDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
@@ -22,5 +25,6 @@ public class Comment extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
 
 }

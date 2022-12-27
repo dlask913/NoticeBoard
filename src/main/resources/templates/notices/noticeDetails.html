@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout=http://www.ultraq.net.nz/thymeleaf/layout layout:decorate="~{layouts/layout1}">
+<!--사용자 스크립트-->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(function (){
+            $("#btn_toggle").click(function (){
+            $("#Toggle").toggle();
+          });
+        });
+
+<!--        $(function (){-->
+<!--            $("#update_comment").click(function (){-->
+<!--            alert("update");-->
+<!--            $("#comment_content").hide();-->
+<!--            });-->
+<!--        });-->
+    </script>
+</th:block>
 <th:block layout:fragment="css">
     <style>
         .fieldError{
@@ -18,8 +35,7 @@
 <!--            padding:16px 31px;-->
             text-decoration:none;
             text-shadow: 0px 1px 0px #fff;
-            margin-left: 20px;
-            margin-right: 20px;
+            margin: 20px;
             width: 100px;
             height: 40px;
         }
@@ -31,15 +47,16 @@
             position:relative;
             top:1px;
         }
+
     </style>
 </th:block>
     <div layout:fragment="content">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <div class="card">
+        <div class="row" >
             <div class="card-body h-100">
                 <h1 class="card-title" style="text-align: center;"><span th:text="${notice.title}"></span></h1>
-                <p></p>
-                    <p class="card-text" style="float:left;"> &nbsp; &nbsp;<span th:text="${notice.userName}"></span><small class="text-muted"> &nbsp; &nbsp; &nbsp;<span th:text="${#temporals.format(notice.regTime, 'yyyy-MM-dd HH:mm:ss')}"></span></small></p>
+                <br/>
+                    <p class="card-text" style="float:left;"><img class="card-img-top" style="border-radius: 70%; width: 35px; height: 35px;" th:src="${member.memberImgDto.imgUrl}"> &nbsp;<span th:text="${notice.userName}"></span><small class="text-muted"> &nbsp; &nbsp; &nbsp;<span th:text="${#temporals.format(notice.regTime, 'yyyy-MM-dd HH:mm:ss')}"></span></small></p>
                     <div class="text-right" >
                         <span th:if="${#strings.equals(#authentication.name,userId)}"> <!-- 본인이 쓴 글만 수정/삭제 가능 -->
                             <a href="/" th:href="@{/notices/remove/{id} (id=${notice.id})}" class="btn" role="button"><i class="fa fa-trash"></i></a>
@@ -51,8 +68,46 @@
                 <p class="card-text"><span th:text="${notice.content}"></span></p>
             </div>
             <p></p>
-            <button class="button" type="button"><i class="fa fa-comments" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;댓글</button>
             <p></p>
+        </div>
+        <br/>
+        <div>
+            <button id="btn_toggle" class="button" type="button"><i class="fa fa-comments" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;댓글</button>
+            <br/>
+                <div class="card" id="Toggle">
+                    <form th:action="@{/notices/{id}/details (id=${notice.id})}" role="form" method="post" th:object="${updateDto}">
+                        <div th:if="${not #lists.isEmpty(commentList)}" class="card-body">
+                            <div th:each="comment, status: ${commentList}">
+                                <p class="card-text"><span style="float: left;" th:text="${comment.member.userName}"></span></p>
+                                <div class="text-right" >
+                                    <span th:if="${#strings.equals(#authentication.name,comment.member.email)}"> <!-- 본인이 쓴 글만 수정/삭제 가능 -->
+                                        <a href="/" th:href="@{/comments/{noticeId}/remove/{id} (id=${comment.id},noticeId=${notice.id})}" class="btn" role="button"><i class="fa fa-trash"></i></a>
+                                        <a href="/" th:href="@{/comments/{noticeId}/{id} (id=${comment.id},noticeId=${notice.id})}" class="btn"><i class="fa fa-pencil"></i></a>
+                                    </span>
+                                </div>
+                                <div class="middle-btn" th:if="${not #strings.equals(updateDto.id,comment.id)}">
+                                    <p class="card-text"><span id="comment_content" th:text="${comment.commentContent}"></span></p>
+                                </div>
+                                <div class="middle-btn" th:unless="${not #strings.equals(updateDto.id,comment.id)}">
+                                    <textarea type="text" rows="5" th:field="${updateDto.commentContent}" class="form-control"></textarea>
+                                    <button th:formaction="@{'/comments/'+${notice.id}+'/'+${comment.id}}" type="submit" style="float: right;">수정하기</button>
+                                    <br/>
+                                    <br/>
+                                </div>
+                                <small class="text-muted"><span th:text="${#temporals.format(comment.regTime, 'yyyy-MM-dd HH:mm:ss')}"></span></small>
+                                <hr>
+                            </div>
+                        </div>
+                    </form>
+                    <form th:action="@{/notices/{id}/details (id=${notice.id})}" role="form" method="post" th:object="${commentDto}">
+                        <div class="card-body">
+                            <p class="card-text"><img class="card-img-top" style="border-radius: 70%; width: 35px; height: 35px;" th:src="${member.memberImgDto.imgUrl}">&nbsp;&nbsp;<span th:text="${notice.userName}"></span></p>
+                            <textarea type="text" rows="5" th:field="*{commentContent}" class="form-control" placeholder="내용을 입력해주세요"></textarea>
+                            <button class="button" type="submit" style="float: right;">등록하기</button>
+                            <br/>
+                        </div>
+                    </form>
+                </div>
         </div>
     </div>
 </html>

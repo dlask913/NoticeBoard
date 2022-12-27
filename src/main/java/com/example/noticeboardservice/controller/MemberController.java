@@ -79,7 +79,6 @@ public class MemberController {
 
         Member member = memberService.findByEmail(principal.getName());
         MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
-        System.out.println("URL>>"+memberFormDto.getMemberImgDto().getImgUrl());
 
         model.addAttribute("notice",res);
         model.addAttribute("member",memberFormDto);
