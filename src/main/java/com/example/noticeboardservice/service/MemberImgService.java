@@ -34,7 +34,7 @@ public class MemberImgService {
         // 이미지 정보 저장
         memberImg.updateMemberImg(oriImgName,imgName,imgUrl);
         memberImgRepository.save(memberImg);
-
+        memberImg.getMember().setMemberImg(memberImg);
     }
 
     public void updateMemberImg(Long memberImgId, MultipartFile memberImgFile) throws Exception {

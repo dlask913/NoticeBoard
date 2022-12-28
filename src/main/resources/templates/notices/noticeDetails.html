@@ -84,9 +84,14 @@
                                         <a href="/" th:href="@{/comments/{noticeId}/remove/{id} (id=${comment.id},noticeId=${notice.id})}" class="btn" role="button"><i class="fa fa-trash"></i></a>
                                         <a href="/" th:href="@{/comments/{noticeId}/{id} (id=${comment.id},noticeId=${notice.id})}" class="btn"><i class="fa fa-pencil"></i></a>
                                     </span>
+                                    <span th:unless="${#strings.equals(#authentication.name,comment.member.email)}">
+                                        <br/>
+                                        <p/>
+                                    </span>
                                 </div>
                                 <div class="middle-btn" th:if="${not #strings.equals(updateDto.id,comment.id)}">
-                                    <p class="card-text"><span id="comment_content" th:text="${comment.commentContent}"></span></p>
+
+                                    <p class="card-text"><span th:text="${comment.commentContent}"></span></p>
                                 </div>
                                 <div class="middle-btn" th:unless="${not #strings.equals(updateDto.id,comment.id)}">
                                     <textarea type="text" rows="5" th:field="${updateDto.commentContent}" class="form-control"></textarea>
@@ -101,7 +106,7 @@
                     </form>
                     <form th:action="@{/notices/{id}/details (id=${notice.id})}" role="form" method="post" th:object="${commentDto}">
                         <div class="card-body">
-                            <p class="card-text"><img class="card-img-top" style="border-radius: 70%; width: 35px; height: 35px;" th:src="${member.memberImgDto.imgUrl}">&nbsp;&nbsp;<span th:text="${notice.userName}"></span></p>
+                            <p class="card-text"><img class="card-img-top" style="border-radius: 70%; width: 35px; height: 35px;" th:src="${member.memberImgDto.imgUrl}">&nbsp;&nbsp;<span th:text="${member.userName}"></span></p>
                             <textarea type="text" rows="5" th:field="*{commentContent}" class="form-control" placeholder="내용을 입력해주세요"></textarea>
                             <button class="button" type="submit" style="float: right;">등록하기</button>
                             <br/>

@@ -36,7 +36,7 @@ public class CommentController {
     public String updateContent(@PathVariable("id") Long commentId, @PathVariable("noticeId") Long noticeId,
                                 Model model) {
         Comment comment = commentService.findById(commentId);
-        Notice notice = noticeService.findByNoticeId(noticeId);
+        Notice notice = noticeService.findById(noticeId);
         Member member = notice.getMember();
         MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
         String userId = notice.getMember().getEmail();

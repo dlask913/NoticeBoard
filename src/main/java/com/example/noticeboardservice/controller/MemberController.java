@@ -66,28 +66,8 @@ public class MemberController {
         return "members/memberLoginForm";
     }
 
-    @GetMapping(value = "/mypage")
-    public String myPage(Model model, Principal principal){
-        List<Notice> notices = noticeService.findAll();
-        List<Notice> res = new ArrayList<>();
-        for (Notice notice :
-                notices) {
-            if (notice.getMember().getEmail().equals(principal.getName())){
-                res.add(notice);
-            }
-        }
-
-        Member member = memberService.findByEmail(principal.getName());
-        MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
-
-        model.addAttribute("notice",res);
-        model.addAttribute("member",memberFormDto);
-
-        return "members/memberPage";
-    }
-
-    @GetMapping(value = "/{id}")
-    public String memberUpdate(@PathVariable("id") String id, Model model) {
+    @GetMapping(value = "/{email}")
+    public String memberUpdate(@PathVariable("email") String id, Model model) {
         Member member = memberService.findByEmail(id);
         MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
         model.addAttribute("memberFormDto", memberFormDto);
@@ -121,4 +101,34 @@ public class MemberController {
         return "redirect:/members/mypage";
     }
 
+    @GetMapping(value = "/mypage")
+    public String myPage(Model model, Principal principal){
+        List<Notice> notices = noticeService.findAll();
+        List<Notice> res = new ArrayList<>();
+        for (Notice notice :
+                notices) {
+            if (notice.getMember().getEmail().equals(principal.getName())){
+                res.add(notice);
+            }
+        }
+
+        Member member = memberService.findByEmail(principal.getName());
+        MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
+
+        model.addAttribute("notice",res);
+        model.addAttribute("member",memberFormDto);
+
+        return "members/memberPage";
+    }
+
+    @PostMapping(value = "/remove/{email}")
+    public String memberUpdate(@PathVariable("email") String id, @Valid MemberFormDto memberFormDto,
+                               BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "member/memberForm";
+        }
+        Member member = memberService.findByEmail(id);
+        memberService.deleteMember(member);
+        return "redirect:/";
+    }
 }

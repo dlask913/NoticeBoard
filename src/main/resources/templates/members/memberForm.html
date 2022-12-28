@@ -113,6 +113,7 @@
         <div class="middle-btn" th:unless="${#strings.isEmpty(memberFormDto.id)}">
             <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
             <button th:formaction="@{'/members/'+${#authentication.name}}" type="submit">수정</button>
+            <button th:formaction="@{'/members/remove/'+${#authentication.name}}" type="submit">회원 탈퇴</button>
         </div>
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     </form>

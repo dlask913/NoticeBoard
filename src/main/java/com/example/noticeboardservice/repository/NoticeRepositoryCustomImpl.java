@@ -40,8 +40,8 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom{
     private BooleanExpression searchByLike(String searchBy, String searchQuery) {
         if (StringUtils.equals("title", searchBy)) {
             return QNotice.notice.title.like("%" + searchQuery + "%");
-        } else if (StringUtils.equals("createdBy", searchBy)) {
-            return QNotice.notice.createdBy.like("%"+searchQuery+"%");
+        } else if (StringUtils.equals("userName", searchBy)) {
+            return QNotice.notice.userName.like("%"+searchQuery+"%");
         }
         return null;
     }

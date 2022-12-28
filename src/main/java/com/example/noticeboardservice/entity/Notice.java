@@ -7,11 +7,11 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-@Getter
-@Setter
-@ToString
+@Getter @Setter @ToString
 @Table(name = "notice")
 @Entity
 public class Notice extends BaseEntity{
@@ -35,13 +35,16 @@ public class Notice extends BaseEntity{
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL)
+    private List<Comment> noticeComments = new ArrayList<>();
+
+
     public static Notice createNotice(NoticeDto noticeDto, Member member) {
         Notice notice = new Notice();
         notice.setTitle(noticeDto.getTitle());
         notice.setContent(noticeDto.getContent());
-        notice.setRegTime(LocalDateTime.now());
-        notice.setUpdateTime(LocalDateTime.now());
         notice.setMember(member);
+        member.getMemberNotices().add(notice);
         return notice;
     }
 }

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,44 +37,6 @@ public class NoticeController {
     private final MemberService memberService;
     private final CommentService commentService;
 
-    @GetMapping(value = "/{noticeId}/details")
-    public String noticeDetails(@PathVariable("noticeId") Long noticeId, Model model) {
-        Notice notice = noticeService.findByNoticeId(noticeId);
-        Member member = notice.getMember();
-        MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
-        String userId = notice.getMember().getEmail();
-        model.addAttribute("notice", notice);
-        model.addAttribute("member", memberFormDto);
-        model.addAttribute("userId", userId);
-        model.addAttribute("commentDto", new CommentDto());
-        model.addAttribute("updateDto", new CommentDto());
-
-        List<Comment> commentList = commentService.findAll();
-        model.addAttribute("commentList", commentList);
-        return "notices/noticeDetails";
-    }
-
-    @PostMapping(value = "/{noticeId}/details")
-    public String commentNew(@PathVariable("noticeId") Long noticeId, Model model,
-                             CommentDto commentDto, Principal principal){
-
-        Member member = memberService.findByEmail(principal.getName());
-        commentService.saveComment(commentDto,noticeId,member.getId());
-
-        return "redirect:/notices/{noticeId}/details";
-    }
-
-    @GetMapping(value = {"/all","/all/{page}"})
-    public String noticesList(Model model, @PathVariable("page")Optional<Integer> page, NoticeSearchDto noticeSearchDto) {
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,9);
-        Page<Notice> notices = noticeService.getAdminItemPage(noticeSearchDto, pageable);
-
-        model.addAttribute("noticeList", notices);
-        model.addAttribute("noticeSearchDto", noticeSearchDto);
-        model.addAttribute("maxPage", 5);
-        return "notices/noticeList";
-    }
-
     @GetMapping(value = "/new")
     public String noticeForm(Model model) {
         model.addAttribute("noticeDto", new NoticeDto());
@@ -83,7 +46,8 @@ public class NoticeController {
 
     // BindingResult나 Errors는 바인딩 받는 객체 바로 다음에 선언
     @PostMapping(value = "/new")
-    public String noticeCreate(@Valid NoticeDto noticeDto,BindingResult bindingResult,Model model, Principal principal) {
+    public String noticeCreate(@Valid NoticeDto noticeDto,BindingResult bindingResult,Model model,
+                               Principal principal) {
         if (bindingResult.hasErrors()) {
             return "notices/noticeForm";
         }
@@ -99,15 +63,33 @@ public class NoticeController {
         return "redirect:/notices/all";
     }
 
-    @GetMapping(value = "/remove/{id}")
-    public String noticeDelete(@PathVariable("id") Long id) {
-        noticeService.deleteNotice(id);
-        return "redirect:/notices/all";
+    @GetMapping(value = "/{noticeId}/details")
+    public String noticeDetails(@PathVariable("noticeId") Long noticeId, Model model, Principal principal) {
+        Notice notice = noticeService.findById(noticeId);
+        Member member = memberService.findByEmail(principal.getName());
+        MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
+        String userId = notice.getMember().getEmail();
+        model.addAttribute("notice", notice);
+        model.addAttribute("member", memberFormDto);
+        model.addAttribute("userId", userId);
+        model.addAttribute("commentDto", new CommentDto());
+        model.addAttribute("updateDto", new CommentDto());
+
+        List<Comment> commentList = commentService.findAll();
+        List<Comment> res = new ArrayList<>();
+        for (Comment comment :
+                commentList) {
+            if (comment.getNotice().getId().equals(noticeId)) {
+                res.add(comment);
+            }
+        }
+        model.addAttribute("commentList", res);
+        return "notices/noticeDetails";
     }
 
     @GetMapping(value = "/{id}")
     public String noticeUpdate(@PathVariable("id") Long id, Model model) {
-        Notice notice = noticeService.findByNoticeId(id);
+        Notice notice = noticeService.findById(id);
         model.addAttribute("noticeDto", notice);
         return "notices/noticeForm";
     }
@@ -116,5 +98,32 @@ public class NoticeController {
     public String noticeUpdate(@PathVariable("id") Long id, Notice notice) {
         noticeService.updateNotice(id,notice);
         return "redirect:/notices/all";
+    }
+
+    @GetMapping(value = "/remove/{id}")
+    public String noticeDelete(@PathVariable("id") Long id) {
+        noticeService.deleteNotice(id);
+        return "redirect:/notices/all";
+    }
+
+    @GetMapping(value = {"/all","/all/{page}"})
+    public String noticesList(Model model, @PathVariable("page")Optional<Integer> page, NoticeSearchDto noticeSearchDto) {
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0,9);
+        Page<Notice> notices = noticeService.getAdminItemPage(noticeSearchDto, pageable);
+
+        model.addAttribute("noticeList", notices);
+        model.addAttribute("noticeSearchDto", noticeSearchDto);
+        model.addAttribute("maxPage", 5);
+        return "notices/noticeList";
+    }
+
+    @PostMapping(value = "/{noticeId}/details")
+    public String commentNew(@PathVariable("noticeId") Long noticeId, Model model,
+                             CommentDto commentDto, Principal principal){
+
+        Member member = memberService.findByEmail(principal.getName());
+        commentService.saveComment(commentDto,noticeId,member.getId());
+
+        return "redirect:/notices/{noticeId}/details";
     }
 }

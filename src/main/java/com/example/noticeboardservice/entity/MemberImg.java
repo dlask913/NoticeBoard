@@ -17,7 +17,7 @@ public class MemberImg extends BaseEntity {
     private String oriImgName; //원본 이미지 파일명
     private String imgUrl; //이미지 조회 경로
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "member_id")
     private Member member;
 

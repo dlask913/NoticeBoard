@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -22,33 +23,23 @@ public class NoticeService {
         return noticeRepository.save(notice);
     }
 
+    public Notice findById(Long id){
+        return noticeRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
     public List<Notice> findAll() {
         return noticeRepository.findAll();
     }
 
-    public Notice findByNoticeId(Long userId){
-        List<Notice> noticeList = noticeRepository.findAll();
-        for (Notice notice:noticeList) {
-            if (notice.getId() == userId) {
-                return notice;
-            }
-        }
-        return null;
+    public void updateNotice(Long id, Notice updateNotice) {
+        Notice notice = noticeRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        notice.setTitle(updateNotice.getTitle());
+        notice.setContent(updateNotice.getContent());
     }
 
     public void deleteNotice(Long id){
-        List<Notice> noticeList = noticeRepository.findAll();
-        for (Notice notice:noticeList) {
-            if (notice.getId().equals(id)) {
-                noticeRepository.delete(notice);
-            }
-        }
-    }
-
-    public void updateNotice(Long id, Notice updateNotice) {
-        Notice notice = findByNoticeId(id);
-        notice.setTitle(updateNotice.getTitle());
-        notice.setContent(updateNotice.getContent());
+        Notice notice = noticeRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        noticeRepository.delete(notice);
     }
 
     @Transactional(readOnly = true)

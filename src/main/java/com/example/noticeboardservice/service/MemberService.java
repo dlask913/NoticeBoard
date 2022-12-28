@@ -28,6 +28,11 @@ public class MemberService implements UserDetailsService {
     private final MemberImgService memberImgService;
     private final MemberImgRepository memberImgRepository;
 
+    public Member findByEmail(String email) {
+        Member findMember = memberRepository.findByEmail(email);
+        return findMember;
+    }
+
     public Member saveMember(Member member) {
         validateDuplicateMember(member);
         return memberRepository.save(member);
@@ -37,18 +42,6 @@ public class MemberService implements UserDetailsService {
         Member findMember = memberRepository.findByEmail(member.getEmail());
         if (findMember != null) {
             throw new IllegalStateException("이미 가입된 회원입니다");
-        }
-    }
-
-    public Member findByEmail(String email) {
-        Member findMember = memberRepository.findByEmail(email);
-        return findMember;
-    }
-
-    private void validateExistMember(Member member) {
-        Member findMember = memberRepository.findByEmail(member.getEmail());
-        if (findMember == null) {
-            throw new IllegalStateException("없는 회원입니다");
         }
     }
 
@@ -64,16 +57,6 @@ public class MemberService implements UserDetailsService {
                 .password(member.getPassword())
                 .roles(member.getRole().toString())
                 .build();
-    }
-
-    public Long updateMember(Long id, MemberFormDto memberFormDto, MultipartFile memberImgFile) throws Exception {
-        Member member = memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        member.updateMember(memberFormDto);
-
-        Long memberImgId = memberFormDto.getMemberImgId();
-        memberImgService.updateMemberImg(memberImgId,memberImgFile);
-        return member.getId();
-
     }
 
     public Long saveMember(Member member, MultipartFile memberImgFile) throws Exception {
@@ -95,6 +78,19 @@ public class MemberService implements UserDetailsService {
         MemberFormDto memberFormDto = MemberFormDto.of(member);
         memberFormDto.setMemberImgDto(memberImgDto);
         return memberFormDto;
+    }
+
+    public Long updateMember(Long id, MemberFormDto memberFormDto, MultipartFile memberImgFile) throws Exception {
+        Member member = memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        member.updateMember(memberFormDto);
+
+        Long memberImgId = memberFormDto.getMemberImgId();
+        memberImgService.updateMemberImg(memberImgId,memberImgFile);
+        return member.getId();
+    }
+
+    public void deleteMember(Member member) {
+        memberRepository.delete(member);
     }
 
 }

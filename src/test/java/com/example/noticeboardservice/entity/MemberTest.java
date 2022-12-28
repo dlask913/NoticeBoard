@@ -20,7 +20,6 @@ import javax.persistence.PersistenceContext;
 class MemberTest {
     @Autowired
     MemberRepository memberRepository;
-
     @PersistenceContext
     EntityManager em;
 
@@ -41,4 +40,6 @@ class MemberTest {
         System.out.println("create member : "+member.getCreatedBy());
         System.out.println("modify member : "+member.getModifiedBy());
     }
+
+
 }
