@@ -3,7 +3,7 @@
 ### 1. 기능 설명
 
 
-    - Member : 회원 가입 / 수정 / 삭제
+    - Member : 회원 가입 / 수정 / 탈퇴
     - MemberImg : 프로필 이미지 등록 / 수정 / 삭제
     - Notice : 게시글 등록 / 수정 / 삭제 ( 본인이 쓴 글만 수정/삭제 O )
     - Comment : 댓글 등록 / 수정 / 삭제 ( 본인이 쓴 댓글만 수정/삭제 O )
@@ -25,7 +25,7 @@
 
 
 ### 3. 실행결과
-- 로그인했을 때 초기 화면
+- 로그인했을 때 초기 화면 ( 본인이 쓴 Notices/Comments 확인 )
 <div align="center">
     <img src="https://user-images.githubusercontent.com/79985588/209906227-5332a4fd-d389-49c8-8f54-7bc2b14c02fc.png" 
     width="750" height="350">
