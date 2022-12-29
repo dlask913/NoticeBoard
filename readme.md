@@ -30,3 +30,8 @@
     <img src="https://user-images.githubusercontent.com/79985588/209906227-5332a4fd-d389-49c8-8f54-7bc2b14c02fc.png" 
     width="800" height="400">
 </div>
+
+
+- UI 정리 
+[Notice-Service UI.pdf](https://github.com/dlask913/NoticeBoard/files/10317884/Notice-Service.UI.pdf)
+
