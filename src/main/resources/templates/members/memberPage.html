@@ -59,7 +59,7 @@
             </div>
         </div>
         <div style="float: left; width:70%; padding:10px; margin-left: 30px;">
-            <h2> 내가 쓴 글 </h2>
+            <h2> Notices </h2>
             <p></p>
             <p></p>
             <table class="table" style="table-layout: fixed; float: left; text-align: center;">
@@ -77,6 +77,24 @@
                     </td>
                     <td th:text="${notice.userName}"></td>
                     <td th:text="${#temporals.format(notice.regTime, 'yyyy-MM-dd')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="float: left; width:70%; padding:10px; margin-left: 30px;">
+            <h2> Comments </h2>
+            <p></p>
+            <p></p>
+            <table class="table" style="table-layout: fixed; float: left; text-align: center;">
+
+                <tbody>
+                <tr th:each="comment, status: ${comment}">
+                    <td>
+                        <a href="#" th:href="@{/notices/{id}/details (id=${comment.notice.id})}" role="button"><span th:text="${comment.commentContent}"></span></a>
+                        <br/>
+                        <small class="text-muted">게시글명: <span th:text="${comment.notice.title}"></span></small>
+                    </td>
+                    <td th:text="${#temporals.format(comment.regTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
                 </tr>
                 </tbody>
             </table>

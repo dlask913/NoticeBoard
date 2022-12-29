@@ -2,8 +2,10 @@ package com.example.noticeboardservice.controller;
 
 import com.example.noticeboardservice.dto.MemberFormDto;
 import com.example.noticeboardservice.dto.MemberImgDto;
+import com.example.noticeboardservice.entity.Comment;
 import com.example.noticeboardservice.entity.Member;
 import com.example.noticeboardservice.entity.Notice;
+import com.example.noticeboardservice.service.CommentService;
 import com.example.noticeboardservice.service.MemberService;
 import com.example.noticeboardservice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,6 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
-    private final NoticeService noticeService;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping(value = "/new")
@@ -75,21 +76,20 @@ public class MemberController {
     }
 
     @PostMapping(value = "/{email}")
-    public String memberUpdate(@PathVariable("email") String id, @Valid MemberFormDto memberFormDto,
-                               BindingResult bindingResult,
+    public String memberUpdate(@Valid MemberFormDto memberFormDto, BindingResult bindingResult,
+                               @PathVariable("email") String id,
                                @RequestParam("memberImgFile") MultipartFile memberImgFile, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "member/memberForm";
-        }
-        if (memberImgFile.isEmpty() && memberFormDto.getId() == null) {
-            model.addAttribute("errorMessage", "프로필 이미지를 등록해주세요.");
-        }
 
         Member member = memberService.findByEmail(id);
-        if (!passwordEncoder.matches(memberFormDto.getPassword(), member.getPassword())) {
+        if (bindingResult.hasErrors() || !passwordEncoder.matches(memberFormDto.getPassword(), member.getPassword())) {
+            memberFormDto = memberService.getMemberDtl(member.getId());
             model.addAttribute("loginErrorMsg", "비밀번호를 확인해주세요.");
-            model.addAttribute("memberFormDto", member);
+            model.addAttribute("memberFormDto", memberFormDto);
             return "members/memberForm";
+        }
+
+        if (memberImgFile.isEmpty() && memberFormDto.getId() == null) {
+            model.addAttribute("errorMessage", "프로필 이미지를 등록해주세요.");
         }
 
         try {
@@ -98,27 +98,7 @@ public class MemberController {
             model.addAttribute("errorMessage", "프로필 수정 중 에러 발생");
             return "member/memberForm";
         }
-        return "redirect:/members/mypage";
-    }
-
-    @GetMapping(value = "/mypage")
-    public String myPage(Model model, Principal principal){
-        List<Notice> notices = noticeService.findAll();
-        List<Notice> res = new ArrayList<>();
-        for (Notice notice :
-                notices) {
-            if (notice.getMember().getEmail().equals(principal.getName())){
-                res.add(notice);
-            }
-        }
-
-        Member member = memberService.findByEmail(principal.getName());
-        MemberFormDto memberFormDto = memberService.getMemberDtl(member.getId());
-
-        model.addAttribute("notice",res);
-        model.addAttribute("member",memberFormDto);
-
-        return "members/memberPage";
+        return "redirect:/";
     }
 
     @PostMapping(value = "/remove/{email}")
