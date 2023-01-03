@@ -26,4 +26,5 @@ public class MemberImg extends BaseEntity {
         this.imgName = imgName;
         this.imgUrl = imgUrl;
     }
+
 }
